@@ -1,0 +1,28 @@
+require 'rubygems'
+require 'bundler'
+
+Bundler.setup
+
+RAILS_ENV = 'test'
+
+# Load Rails
+require 'active_support'
+require 'action_controller'
+require 'action_mailer'
+require 'rails/version'
+
+RAILS_ROOT = File.join(File.dirname(__FILE__), 'rails')
+$:.unshift(RAILS_ROOT)
+
+ActionController::Base.view_paths = RAILS_ROOT
+Dir[File.expand_path(File.join(RAILS_ROOT, '**', '*.rb'))].each { |f| require f }
+
+require 'spec/autorun'
+require 'spec/rails'
+
+require 'doc_tests'
+DocTests::Config.directory = File.join(File.dirname(__FILE__), 'examples')
+
+Spec::Runner.configure do |config|
+  
+end
