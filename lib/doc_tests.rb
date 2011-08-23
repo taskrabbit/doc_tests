@@ -1,0 +1,3 @@
+module DocTests
+  # Your code goes here...
+end
