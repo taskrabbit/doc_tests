@@ -2,3 +2,9 @@
 .bundle
 Gemfile.lock
 pkg/*
+.DS_Store
+spec/rails/tmp/*
+spec/rails/log/*
+spec/rails/tmp/**/*
+spec/rails/bin/*
+spec/rails/rerun.txt

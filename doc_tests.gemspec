@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Brian Leonard"]
   s.email       = ["brian@bleonard.com"]
   s.homepage    = ""
-  s.summary     = %q{API documentation with built-in integration testing}
-  s.description = %q{API documentation with built-in integration testing}
+  s.summary     = %q{Documentation with built-in integration testing}
+  s.description = %q{Documentation with built-in integration testing}
 
   s.rubyforge_project = "doc_tests"
 
@@ -21,9 +21,14 @@ Gem::Specification.new do |s|
   
   s.add_dependency('redcarpet', '~> 2.0.0b3')
   
-  s.add_development_dependency('rails', '~> 2.3.10')
-  s.add_development_dependency('rspec', '~> 1.3.0')
-  s.add_development_dependency('rspec-rails', '~> 1.3.2')
-  s.add_development_dependency('mocha', '~> 0.9.8')
-  s.add_development_dependency('ruby-debug', '~> 0.10.3')
+  s.add_development_dependency('rails', '=2.3.10')
+  s.add_development_dependency('rspec', '=1.3.0')
+  s.add_development_dependency('rspec-rails', '=1.3.2')
+  s.add_development_dependency('mocha', '=0.9.8')
+  s.add_development_dependency('ruby-debug', '=0.10.3')
+  
+  s.add_development_dependency('cucumber', '=0.10.7')
+  s.add_development_dependency('gherkin', '=2.4.0')
+  s.add_development_dependency('cucumber-rails', '=0.3.2')
+  s.add_development_dependency('capybara', '=0.3.9')
 end

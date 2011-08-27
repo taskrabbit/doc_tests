@@ -14,8 +14,10 @@ require 'rails/version'
 RAILS_ROOT = File.join(File.dirname(__FILE__), 'rails')
 $:.unshift(RAILS_ROOT)
 
-ActionController::Base.view_paths = RAILS_ROOT
-Dir[File.expand_path(File.join(RAILS_ROOT, '**', '*.rb'))].each { |f| require f }
+#ActionController::Base.view_paths = RAILS_ROOT
+#Dir[File.expand_path(File.join(RAILS_ROOT, '**', '*.rb'))].each { |f| require f }
+
+require File.join(RAILS_ROOT, 'config', 'environment.rb')
 
 require 'spec/autorun'
 require 'spec/rails'
