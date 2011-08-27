@@ -1,6 +1,10 @@
 module DocTests
-  class Element < Redcarpet::Render::Base
-    def match?(text)
+  class Element
+    def self.tag
+      :none
+    end
+    
+    def self.matches?(*args)
       false
     end
   end

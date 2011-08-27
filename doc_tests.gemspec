@@ -25,4 +25,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rspec', '~> 1.3.0')
   s.add_development_dependency('rspec-rails', '~> 1.3.2')
   s.add_development_dependency('mocha', '~> 0.9.8')
+  s.add_development_dependency('ruby-debug', '~> 0.10.3')
 end
