@@ -10,6 +10,13 @@ module DocTests
       @extensions ||= ["markdown", "mdown", "md"]
     end
     
+    def render_options
+      @render_options || { :fenced_code_blocks => true }
+    end
+    def render_options=options
+      @render_options = options
+    end
+    
     def documents
       raise "DocTests::directory not set!" unless directory
       raise "DocTests::directory (#{directory}) does not exist!" unless File.exist?(directory)

@@ -1,7 +1,7 @@
 module DocTests
   class Document
     def self.markdown
-      @markdown ||= Redcarpet::Markdown.new(Render, {})
+      @markdown ||= Redcarpet::Markdown.new(Dispatch, Config.render_options)
     end
     
     attr_accessor :file_name
