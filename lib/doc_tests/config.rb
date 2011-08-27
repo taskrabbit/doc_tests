@@ -26,12 +26,12 @@ module DocTests
       Dir[files].collect{ |file| Document.new(file) }
     end
     
-    def register(header)
-      headers << header
+    def register(element)
+      elements << element
     end
     
-    def headers
-      @headers ||= []
+    def elements
+      @elements ||= []
     end
     
     def document(relative_path)

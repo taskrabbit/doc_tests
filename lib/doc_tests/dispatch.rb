@@ -6,7 +6,7 @@ class Dispatch < Redcarpet::Render::Base
     when 1
       self.current = nil
     when 2
-      self.current = find_header(text)
+      self.current = find_element(text)
     else
       current_send('header',*args)
     end
@@ -41,12 +41,12 @@ class Dispatch < Redcarpet::Render::Base
     end
   end
 
-  def find_header(text)
+  def find_element(text)
     found = nil
-    DocTests::Config.headers.each do |h|
-      if h.matches?(text)
+    DocTests::Config.elements.each do |e|
+      if e.matches?(text)
         raise "DocTests::Render ound two headers for text: #{text}" if found
-        found = h
+        found = e
       end
     end
     found

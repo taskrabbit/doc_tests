@@ -7,6 +7,6 @@ require 'redcarpet'
 require 'doc_tests/config'
 require 'doc_tests/document'
 require 'doc_tests/dispatch'
-require 'doc_tests/header'
+require 'doc_tests/element'
 
-require 'doc_tests/headers/request'
+require 'doc_tests/elements/request'

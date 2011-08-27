@@ -1,5 +1,5 @@
 module DocTests
-  class Header < Redcarpet::Render::Base
+  class Element < Redcarpet::Render::Base
     def match?(text)
       false
     end

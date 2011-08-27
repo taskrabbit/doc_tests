@@ -1,6 +1,6 @@
 module DocTests
-  module Headers
-    class Request < DocTests::Header
+  module Elements
+    class Request < DocTests::Element
       def match?(text)
         false
       end
