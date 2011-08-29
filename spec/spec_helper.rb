@@ -11,6 +11,8 @@ require 'action_controller'
 require 'action_mailer'
 require 'rails/version'
 
+
+
 RAILS_ROOT = File.join(File.dirname(__FILE__), 'rails')
 $:.unshift(RAILS_ROOT)
 

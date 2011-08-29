@@ -19,14 +19,14 @@ module DocTests
     
     def add_element(clazz)
       instance = clazz.new
-      instance.preprocess if instance.respond_to?(:preprocess)
+      instance.before if instance.respond_to?(:before)
       current_elements.push instance
     end
     
     def remove_elements(instances)
       instances.each do |instance|
         current_elements.delete(instance)
-        instance.postprocess if instance.respond_to?(:postprocess)
+        instance.after if instance.respond_to?(:after)
       end
     end
     
@@ -83,10 +83,12 @@ module DocTests
       end
       
       push_tag!(:doc, [full_document])
+      current_send('preprocess', [full_document])
       full_document
     end
   
     def postprocess(full_document)
+      current_send('postprocess', [full_document])
       remove_elements(current_elements)
       full_document
     end
