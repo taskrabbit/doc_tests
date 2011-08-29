@@ -1,9 +1,11 @@
 module DocTests
   class Dispatch < Redcarpet::Render::Base
-    VALID_TAGS = [:h1, :h2, :h3, :list, :list_item]
+    
+    VALID_TAGS = [:h1, :h2, :h3, :h4, :h5, :h6, :list, :list_item, :doc]
     
     def reset
       @element_hash = nil
+      @current_elements = nil
     end
     
     def elements(tag)
@@ -16,44 +18,57 @@ module DocTests
     end
     
     def add_element(clazz)
-      current_elements.push clazz.new
+      instance = clazz.new
+      instance.preprocess if instance.respond_to?(:preprocess)
+      current_elements.push instance
     end
     
     def remove_elements(instances)
       instances.each do |instance|
         current_elements.delete(instance)
+        instance.postprocess if instance.respond_to?(:postprocess)
       end
     end
     
-    def current_send(method_name, *args)
+    def current_send(method_name, array)
       current_elements.each do |instance|
         if instance.respond_to?(method_name)
-          instance.send(method_name, *args)
+          instance.send(method_name, *array)
         end
       end
     end
     
+    def push_tag!(tag, array)
+      elements(tag.to_sym).each do |clazz|
+        add_element(clazz) if clazz.matches?(*array)
+      end
+    end
     
-    def header(*args)
-      text = args.first
-      level = args.last
-      
-      # close out old ones
+    def push_tags!(tags, array)
+      tags.each do |tag|
+        push_tag!(tag, array)
+      end
+    end
+    
+    def pop_tag!(tag)
+      pop_tags!([tag])
+    end
+    
+    def pop_tags!(tags)
+      tags = tags.collect(&:to_sym)
       to_remove = []
       current_elements.each do |instance|
-        tag = instance.class.tag.to_s
-        if tag[0,1] == "h"
-          to_remove << instance if tag[1,1].to_i >= level
+        if tags.include? instance.class.tag.to_sym
+          to_remove << instance
         end
       end
       remove_elements(to_remove)
-      
-      
-      elements("h#{level}".to_sym).each do |clazz|
-        add_element(clazz) if clazz.matches?(*args)
-      end
-      
-      current_send('header',*args)
+    end
+
+    def header(text, level)      
+      pop_tags!(level.upto(6).collect{ |i| "h#{i}" }) # equal or smaller levels 
+      push_tag!("h#{level}", [text, level])
+      current_send('header', [text, level])
       "" # don't return anything but a string
     end
   
@@ -62,50 +77,28 @@ module DocTests
       reset
       
       Config.elements.each do |e|
-        tag = e.tag
+        tag = e.tag.to_sym
         raise "Element tag #{tag} is not valid. Valid symbols: [#{VALID_TAGS.join(', ')}]" unless VALID_TAGS.include?(tag)
         elements(tag) << e
-      end  
+      end
+      
+      push_tag!(:doc, [full_document])
       full_document
     end
   
     def postprocess(full_document)
-      self.current = nil
+      remove_elements(current_elements)
       full_document
     end
-
-    def current
-      @header
-    end
-    def current=h
-      @header = h
-    end
-    def current_has?(method_name)
-      current and current.respond_to?(method_name)
-    end
     
-    def find_element(text)
-      found = nil
-      DocTests::Config.elements.each do |e|
-        if e.matches?(text)
-          raise "DocTests::Render ound two headers for text: #{text}" if found
-          found = e
-        end
-      end
-      found
-    end
-  
     # low level
     [
     	"entity",
     	"normal_text"
   	].each do |method_name|
   	  define_method(method_name) do |*args|
-    	  if current_has?(method_name)
-  	      current_send(method_name, *args)
-        else
-          args.first
-        end
+    	  current_send(method_name, args)
+        args.first
       end
     end
   
@@ -143,7 +136,7 @@ module DocTests
     ].each do |method_name|
       define_method(method_name) do |*args|
         #puts "#{method_name}: #{args.join(', ')}"
-        current_send(method_name, *args)
+        current_send(method_name, args)
         ""
       end
     end

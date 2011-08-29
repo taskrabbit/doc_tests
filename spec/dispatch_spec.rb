@@ -30,6 +30,12 @@ class ElementNone < DocTests::Element
   end
 end
 
+class ElementDoc < DocTests::Element
+  def self.tag
+    :doc
+  end
+end 
+
 describe DocTests::Dispatch do
   describe "#preprocess" do
     it "should load the elements" do
@@ -46,6 +52,17 @@ describe DocTests::Dispatch do
       DocTests::Config.stubs(:elements).returns([ElementOne, ElementNone])
       dispatch = DocTests::Dispatch.new
       lambda { dispatch.preprocess(nil) }.should raise_error
+    end
+    it "should call doc level elements" do
+      DocTests::Config.stubs(:elements).returns([ElementOne, ElementDoc])
+      ElementOne.stubs(:matches?).returns(true)
+      ElementDoc.stubs(:matches?).returns(true)
+
+      dispatch = DocTests::Dispatch.new
+      dispatch.current_elements.size.should == 0
+      dispatch.preprocess(nil)
+      dispatch.current_elements.size.should == 1
+      dispatch.current_elements.first.class.should == ElementDoc
     end
   end
   

@@ -1,0 +1,6 @@
+# Cucumber Step Test
+
+The steps in this list should be run
+
+* Given we have cucumber support
+* Then my steps get called

@@ -48,4 +48,17 @@ describe DocTests::Element do
     #element.expects(:list_item).twice
     doc.parse!
   end
+  
+  describe "preprocess and postprocess hooks" do
+    it "should be called if defined" do
+      doc = DocTests::Document.new(nil)
+      doc.stubs(:content).returns("## Two\n### Three")
+
+      DocTests::Config.stubs(:elements).returns([TestElement])
+      TestElement.expects(:matches?).with("Two", 2).returns(true)
+      TestElement.any_instance.expects(:preprocess).once
+      TestElement.any_instance.expects(:postprocess).once
+      doc.parse!
+    end
+  end
 end

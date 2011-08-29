@@ -5,6 +5,7 @@ module DocTests
     end
     
     def self.matches?(*args)
+      # TODO: warning? true?
       false
     end
   end
