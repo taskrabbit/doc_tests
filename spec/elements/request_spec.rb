@@ -1,5 +1,7 @@
 require "spec_helper"
 
-describe DocTests::Elements::Request do
+module DocTests
+  describe Elements::Request do
 
+  end
 end
