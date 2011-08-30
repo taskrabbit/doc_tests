@@ -2,16 +2,21 @@ require 'cucumber/ast/feature'
 
 module DocTests
   class Document < ::Cucumber::Ast::Feature
+    def self.calc_name(file_name)
+      # TODO: just the file name (not including path)?
+      file_name || "Document"
+    end
+    
     attr_accessor :file_name
     def initialize(file_name)
       self.file_name = file_name
       # super(background, comment, tags, keyword, title, description, feature_elements)
       super(nil, 
-          ::Cucumber::Ast::Comment.new("Feature Comment"), 
+          ::Cucumber::Ast::Comment.new(""), 
           ::Cucumber::Ast::Tags.new(nil, []), 
-          "Feature Keyword",
-          "Feature Title",
-          "Feature Descrption",
+          "Feature",
+          Document.calc_name(file_name),
+          "",
           markdowns
         )
     end
@@ -21,19 +26,11 @@ module DocTests
     end
     
     def markdowns
-      [Markdown.new(content)]
+      # split by horizontal rules
+      pieces = content.split(/^\s*(?:[*-]\s?){3,}\s*$/)
+      pieces.reject!{ |c| c.strip.length == 0 }
+      pieces.collect{ |c| Markdown.new(c) }
     end
     
-#    def accept(visitor)
-#      return if ::Cucumber.wants_to_quit
-#      
-#      visitor.visit_feature_name(file_name, indented_name)
-#      # TODO? visitor.visit_tags(tags)
-#      visitor.visit_feature_element(Markdown.new(self, content))
-#    end
-    
-#    def indented_name
-#      "   #{file_name}"
-#    end
   end
 end
