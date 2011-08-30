@@ -15,50 +15,52 @@ class TestElement < DocTests::Element
 end
 
 describe DocTests::Element do
+  before(:each) do
+    @runtime = DocTests::Cucumber::Runtime.new
+    @visitor = ::Cucumber::Ast::TreeWalker.new(@runtime)
+    @markdown = DocTests::Markdown.new("stubbed")
+  end
+  
   it "should be called when parsing level 2" do
-    doc = DocTests::Document.new(nil)
-    doc.stubs(:content).returns("## Two\n### Three")
+    @markdown.stubs(:content).returns("## Two\n### Three")
     
     DocTests::Config.stubs(:elements).returns([TestElement])
     TestElement.expects(:matches?).with("Two", 2).returns(false)
     TestElement.any_instance.expects(:init).never
     TestElement.any_instance.expects(:header).never
-    doc.parse!
+    @markdown.accept(@visitor)
   end
   
   it "should be called when parsing level 3 if matches" do
-    doc = DocTests::Document.new(nil)
-    doc.stubs(:content).returns("## Two\n### Three")
+    @markdown.stubs(:content).returns("## Two\n### Three")
 
     DocTests::Config.stubs(:elements).returns([TestElement])
     TestElement.expects(:matches?).with("Two", 2).returns(true)
     TestElement.any_instance.expects(:init).once
     TestElement.any_instance.expects(:header).twice
-    doc.parse!
+    @markdown.accept(@visitor)
   end
   
   it "should be called for lists if matches" do
-    doc = DocTests::Document.new(nil)
-    doc.stubs(:content).returns("## Two\n* Three\n\n* Four\n\nsomething\n\n* Five\n* Six\n\n\n---------------------------------------")
+    @markdown.stubs(:content).returns("## Two\n* Three\n\n* Four\n\nsomething\n\n* Five\n* Six\n\n\n---------------------------------------")
     
     DocTests::Config.stubs(:elements).returns([TestElement])
     TestElement.expects(:matches?).with("Two", 2).returns(true)
     TestElement.any_instance.expects(:init).once
     #element.expects(:list).once
     #element.expects(:list_item).twice
-    doc.parse!
+    @markdown.accept(@visitor)
   end
   
   describe "before and after hooks" do
     it "should be called if defined" do
-      doc = DocTests::Document.new(nil)
-      doc.stubs(:content).returns("## Two\n### Three")
+      @markdown.stubs(:content).returns("## Two\n### Three")
 
       DocTests::Config.stubs(:elements).returns([TestElement])
       TestElement.expects(:matches?).with("Two", 2).returns(true)
       TestElement.any_instance.expects(:before).once
       TestElement.any_instance.expects(:after).once
-      doc.parse!
+      @markdown.accept(@visitor)
     end
   end
 end
