@@ -27,7 +27,7 @@ describe DocTests::Markdown do
   it "should check the elements for interest" do
     DocTests::Config.stubs(:elements).returns([DocElement])
     DocElement.expects(:matches?).once
-    markdown = DocTests::Config.document("one.mdown").markdowns.first
+    markdown = DocTests::Markdown.new("# One\n## Second\n### Third")
     markdown.accept(@visitor)
   end
   

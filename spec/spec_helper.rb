@@ -25,7 +25,6 @@ require 'spec/autorun'
 require 'spec/rails'
 
 require 'doc_tests'
-DocTests::Config.directory = File.join(File.dirname(__FILE__), 'examples')
 
 Spec::Runner.configure do |config|
   config.mock_with :mocha
