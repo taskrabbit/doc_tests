@@ -19,6 +19,9 @@ module DocTests
           "",
           markdowns
         )
+      self.language = ::Gherkin::I18n.get('en')
+      self.file = File.new(file_name)
+      gherkin_statement(::Gherkin::Formatter::Model::Feature.new([], [], @keyword, @name, @description, 1))
     end
     
     def content

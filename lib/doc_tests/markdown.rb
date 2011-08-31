@@ -56,6 +56,7 @@ module DocTests
             content_options[:description],
             []
           )
+      gherkin_statement(::Gherkin::Formatter::Model::Scenario.new([], [], @keyword, @name, @description, @line))
     end
   
     def content_options
