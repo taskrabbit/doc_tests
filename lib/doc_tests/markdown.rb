@@ -21,6 +21,9 @@ module DocTests
       def add_step_invocation(si)
         @steps << si
       end
+      def step_count
+        @steps.size
+      end
     end
     class Background
       def initialize(markdown)
@@ -57,6 +60,11 @@ module DocTests
             []
           )
       gherkin_statement(::Gherkin::Formatter::Model::Scenario.new([], [], @keyword, @name, @description, @line))
+    end
+    
+    def step_count
+      return 0 unless @steps
+      @steps.step_count
     end
   
     def content_options
