@@ -6,7 +6,7 @@ module DocTests
       :h2
     end
   
-    def initialize
+    def initialize(parent)
       init
     end
   
@@ -20,6 +20,7 @@ module DocTests
       @runtime = Cucumber::Runtime.new
       @visitor = ::Cucumber::Ast::TreeWalker.new(@runtime)
       @markdown = Markdown.new("stubbed")
+      @markdown.init
     end
   
     it "should be called when parsing level 2" do

@@ -4,3 +4,4 @@ This test should fail because of an unknown step
 
  * Given I have never heard of this step
  * Then this test should fail
+ * Given we have cucumber support

@@ -1,71 +1,5 @@
-require "cucumber/ast/step_invocation"
-require "cucumber/ast/step"
-require "cucumber/step_match"
-
 module DocTests
-  class Dispatch < Redcarpet::Render::Base
-    class Match < ::Cucumber::StepMatch
-      def initialize(step)
-        @step = step
-        # super(step_definition, name_to_match, name_to_report, step_arguments)
-        super(@step, "name to match", "" + @step.name, [])
-      end
-      
-      def invoke(multiline_arg)
-        @step.invoke
-      end
-    end
-    class Invocation < ::Cucumber::Ast::StepInvocation
-      def find_step_match!(step_mother, configuration)
-        return if @step_match
-        @step_match = Match.new(@step)
-        step_mother.step_visited(self)
-      end
-    end
-    
-    class Step < ::Cucumber::Ast::Step
-      def initialize(method_name, array, current_elements, counter)
-        @current_elements = current_elements
-        @method_name = method_name
-        @array = array
-        super(counter, "", calc_name)
-      end
-      
-      def calc_name
-        case @method_name
-        when "preprocess"
-          "Preprocess Document"
-        when "postprocess"
-          "Postprocess Document"
-        when "entity"
-          @array.first.to_s
-        when "normal_text"
-          @array.first.to_s
-        when "doc_header"
-         "Document Header"
-        when "doc_footer"
-         "Document Footer"
-        else
-          @method_name
-        end
-      end
-      
-      def step_invocation
-        inv = Invocation.new(self, @name, @multiline_arg, [])
-        ::Cucumber::Ast::StepCollection.new([inv])
-        inv
-      end
-      
-      def invoke
-        @current_elements.each do |instance|
-          if instance.respond_to?(@method_name)
-            instance.send(@method_name, *@array)
-          end
-        end
-      end
-    end
-    
-    
+  class Dispatch < Redcarpet::Render::Base    
     VALID_TAGS = [:h1, :h2, :h3, :h4, :h5, :h6, :list, :list_item, :doc]
 
     def initialize(collection, visitor)
@@ -91,8 +25,8 @@ module DocTests
     end
     
     def add_element(clazz)
-      instance = clazz.new
-      instance.before(@visitor) if instance.respond_to?(:before)
+      instance = clazz.new(self)
+      instance.before if instance.respond_to?(:before)
       current_elements.push instance
     end
     
@@ -102,15 +36,31 @@ module DocTests
         instance.after if instance.respond_to?(:after)
       end
     end
+    
+    def collection
+      @collection
+    end
+    def scenario
+      @collection.markdown
+    end
+
+    def visit_block(name, &block)
+      Stepper.visit_block(@visitor, @counter, name, collection, scenario, block)
+    end
+    
+    def visit_text(text)
+      Stepper.visit_text(@visitor, @counter, text, collection, scenario)
+    end
 
     def current_send(method_name, array)
+      current_elements.each do |instance|
+        if instance.respond_to?(method_name)
+          #puts "#{method_name}: #{array.inspect}"
+          instance.send(method_name, *array)
+        end
+      end
+
       @counter += 1
-      step = Step.new(method_name, array, current_elements, @counter)
-      step.step_collection = @collection
-      step.feature_element = @collection.markdown
-      step_invocation = step.step_invocation
-      step_invocation.step_collection = @collection
-      @visitor.visit_step(step_invocation)
     end
     
     def push_tag!(tag, array)

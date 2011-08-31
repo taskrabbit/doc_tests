@@ -18,6 +18,9 @@ module DocTests
       def content
         markdown.content
       end
+      def add_step_invocation(si)
+        @steps << si
+      end
     end
     class Background
       def initialize(markdown)
@@ -53,7 +56,6 @@ module DocTests
             content_options[:description],
             []
           )
-      #init
     end
   
     def content_options

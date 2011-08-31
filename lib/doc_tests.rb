@@ -10,6 +10,7 @@ require 'doc_tests/markdown'
 require 'doc_tests/dispatch'
 require 'doc_tests/element'
 
+require 'doc_tests/cucumber/stepper'
 require 'doc_tests/cucumber/configuration'
 require 'doc_tests/cucumber/features'
 require 'doc_tests/cucumber/runtime'
