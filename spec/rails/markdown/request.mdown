@@ -1,0 +1,8 @@
+# Requests
+
+These allow us to do various requests.
+For example...
+
+### GET /test
+
+* Then I should see "Hello World"

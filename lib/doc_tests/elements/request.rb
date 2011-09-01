@@ -14,9 +14,27 @@ module DocTests
           @url = url
         end
         
+        def rack
+          ::Capybara.current_session.driver
+        end
+        
+        def title
+          "#{cmd.to_s.upcase} #{url}"
+        end
+        
         def execute!
-          if cmd == :get
-            get(url)
+          case cmd
+          when :get
+            rack.get url
+          when :delete
+            
+          when :post
+            
+          when :put
+            
+          else
+            raise "Unknown method"            
+          
           end
         end
       end
@@ -27,11 +45,11 @@ module DocTests
       
       def self.matches?(text, level)
         return false unless level == 3
-        (text =~ /request/i).present? || parse_command(text).present?
+        !(text =~ /request/i).nil? || !parse_command(text).nil?
       end
       
       def self.parse_command(cmd)
-        return nil if cmd.blank?
+        return nil if cmd.nil? or cmd.strip.length == 0
         pieces = cmd.split
         return nil unless pieces.size == 2
         
@@ -47,13 +65,15 @@ module DocTests
       
       def execute!
         if @command
-          @command.execute!
-          @last_command = @command
+          parent.visit_block(@command.title) do
+            @command.execute!
+          end
         end
         @command = nil
       end
       def header(text, level)
         @command = self.class.parse_command(text)
+        execute!
       end
       
       def after

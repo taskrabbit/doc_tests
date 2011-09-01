@@ -14,7 +14,7 @@ module DocTests
       visitor.visit_step(step_invocation)
     end
     
-    def self.visit_block(visitor, counter, name, collection, scenario, &block)
+    def self.visit_block(visitor, counter, name, collection, scenario, block)
       step = BlockStep.new(counter, name, block)
       visit_step(visitor, step, collection, scenario)
     end
@@ -42,7 +42,7 @@ module DocTests
     class BlockInvocation < ::Cucumber::Ast::StepInvocation
       def find_step_match!(step_mother, configuration)
         return if @step_match
-        @step_match = Match.new(@step)
+        @step_match = BlockMatch.new(@step)
         step_mother.step_visited(self)
       end
     end
@@ -51,14 +51,15 @@ module DocTests
       def initialize(counter, name, block)
         # super(line, keyword, name, multiline_arg=nil)
         super(counter, "", name)
+        @block = block
       end
       
       def step_invocation
-        Invocation.new(self, @name, @multiline_arg, [])
+        BlockInvocation.new(self, @name, @multiline_arg, [])
       end
       
       def call
-        block.call
+        @block.call
       end
     end
   end
