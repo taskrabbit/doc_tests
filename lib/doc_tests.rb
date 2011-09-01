@@ -20,4 +20,4 @@ require 'doc_tests/elements/cucumber'
 require 'doc_tests/elements/request'
 
 DocTests::Config.register(DocTests::Elements::Cucumber)
-
+DocTests::Config.register(DocTests::Elements::Request)
