@@ -45,7 +45,7 @@ module DocTests
       
       def self.matches?(text, level)
         return false unless level == 3
-        !(text =~ /request/i).nil? || !parse_command(text).nil?
+        !parse_command(text).nil?
       end
       
       def self.parse_command(cmd)
@@ -71,8 +71,15 @@ module DocTests
         end
         @command = nil
       end
+      
       def header(text, level)
+        return unless level == 3
+        execute!
         @command = self.class.parse_command(text)
+      end
+      
+      def generic(method_name, args)
+        # something we don't care about
         execute!
       end
       

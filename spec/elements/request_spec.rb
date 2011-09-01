@@ -9,19 +9,6 @@ module DocTests
     end
     
     describe ".matches?" do
-      it "should return false if unrelated" do
-        Elements::Request.matches?("", 3).should == false
-        Elements::Request.matches?("random rething", 3).should == false
-      end
-      it "should check for request" do
-        Elements::Request.matches?("Request", 3).should == true
-        Elements::Request.matches?("Request", 2).should == false
-        Elements::Request.matches?("Request", 4).should == false
-        
-        Elements::Request.matches?("My Request", 3).should == true
-        Elements::Request.matches?("Make the request to the server", 3).should == true
-      end
-    
       it "should return same as parse_command" do
         Elements::Request.stubs(:parse_command).returns(Object.new)
         Elements::Request.matches?("cmd", 2).should be_false
@@ -31,8 +18,7 @@ module DocTests
         Elements::Request.matches?("cmd", 3).should be_false
       end
     end
-
-    
+  
     describe ".parse_command" do
       def cmp_cmd(result, method, url=nil)
         if method.nil?
