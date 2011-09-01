@@ -4,3 +4,13 @@ This test should pass
 
  * Given we have cucumber support
  * Then doc tests should work 
+ 
+Then this won't be run
+
+ * Something random here
+ * Then doc tests should work
+
+But then these two will...
+
+ * Then doc tests should work
+ * Then doc tests should work
