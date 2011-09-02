@@ -55,8 +55,11 @@ module DocTests
     def current_send(method_name, array)
       #puts "#{method_name}: #{array.inspect}"
       
+      impl = []    
       current_elements.each do |instance|
-        unless instance.respond_to?(method_name)
+        if instance.respond_to?(method_name)
+          impl << instance
+        else
           case method_name
           when 'normal_text', 'entity'
             instance.meta(method_name, array) if instance.respond_to?('meta')
@@ -66,11 +69,20 @@ module DocTests
         end
       end
       
-      current_elements.each do |instance|
-        if instance.respond_to?(method_name)
-          
-          instance.send(method_name, *array)
+      call = []
+      impl.each do |instance|
+        meth = "before_#{method_name}?"
+        if instance.respond_to?(meth)
+          if instance.send(meth, *array)
+            call << instance
+          end
+        else
+          call << instance
         end
+      end
+      
+      call.each do |instance|
+        instance.send(method_name, *array)
       end
 
       @counter += 1

@@ -6,8 +6,6 @@ module DocTests
       attr_reader :command
       
       class Command
-        #include Rack::Test::Methods
-        
         attr_reader :cmd, :url
         attr_accessor :data
         def initialize(cmd, url)
@@ -37,6 +35,14 @@ module DocTests
             raise "Unknown request method"
           end
         end
+        
+        def block?
+          cmd == :put or cmd == :post
+        end
+        
+        def header(key, value)
+          rack.header key, value
+        end
       end
       
       def self.tag
@@ -65,17 +71,20 @@ module DocTests
       
       def execute!
         if @command
-          parent.visit_block(@command.title) do
+          parent.visit_block("Requesting -> #{@command.title}") do
             @command.execute!
           end
         end
+        @in_list = nil
         @command = nil
       end
       
       def header(text, level)
         return unless level == 3
         execute!
-        @command = self.class.parse_command(text)
+        parent.visit_block("Starting -> #{text}") do
+          @command = self.class.parse_command(text)
+        end
       end
       
       def block_code(code, language)
@@ -84,6 +93,35 @@ module DocTests
         parent.visit_block("Parsing request #{language} block") do
           @command.data = DocTests::Parsers.send("#{language.downcase.gsub(' ', '_')}_to_hash", code)
         end
+        execute!
+      end
+      
+      def before_list_item?(text, type)
+        return false unless @command
+        return true if @in_list
+        return true if text.split(":").size == 2
+
+        # run it before some other list item like cucumber
+        execute!
+        false
+      end
+      
+      def list_item(text, type)
+        @in_list = true
+        parent.visit_block("Header -> #{text.strip}") do
+          pieces = text.split(":")
+          if pieces.size == 2
+            @in_list = true
+            @command.header(pieces[0].strip, pieces[1].strip)
+          elsif @in_list
+            raise "#{text} is an invalid header. Example... Authorization: token"
+          end
+        end
+      end
+      
+      def list(content, type)
+        execute! if @command and not @command.block?
+        @in_list = false
       end
       
       def generic(method_name, args)

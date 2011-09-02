@@ -104,7 +104,10 @@ Then /^(?:|I )should see JSON key "(.+)" with value "(.+)"$/ do |key, value|
     raise "Unknown key: #{sub}" unless hash.is_a? Hash and hash.key?(sub)
     hash = hash[sub]
   end
-  hash.to_s.should == value.to_s
+  value = value.to_s unless value.nil?
+  value = nil if value == "null"
+  hash = hash.to_s unless hash.nil?
+  hash.should == value
 end
 
 Then /^(?:|I )should see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|
