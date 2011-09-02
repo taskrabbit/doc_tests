@@ -90,9 +90,8 @@ module DocTests
       def block_code(code, language)
         return unless @command
         language ||= "YML"
-        parent.visit_block("Parsing request #{language} block") do
-          @command.data = DocTests::Parsers.send("#{language.downcase.gsub(' ', '_')}_to_hash", code)
-        end
+        p = Parser.new(language, ["Request Data", "hash"])
+        @command.data = p.visit(parent, code)
         execute!
       end
       
