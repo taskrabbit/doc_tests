@@ -19,7 +19,7 @@ module DocTests
     end
     
     def self.fixup(value)
-      value.downcase.gsub(' ', '_')
+      value.downcase.gsub(/[^a-zA-Z0-9]/, '_')
     end
     
     def find

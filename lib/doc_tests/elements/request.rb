@@ -90,7 +90,7 @@ module DocTests
       def block_code(code, language)
         return unless @command
         language ||= "YML"
-        p = Parser.new(language, ["Request Data", "hash"])
+        p = Parser.new(language, ["Request Data", "Hash"])
         @command.data = p.visit(parent, code)
         execute!
       end
