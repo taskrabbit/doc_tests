@@ -10,7 +10,7 @@ module DocTests
       end
       def accept(visitor, &proc)
         return if ::Cucumber.wants_to_quit
-        Redcarpet::Markdown.new(Dispatch.new(self, visitor)).render(content)
+        Redcarpet::Markdown.new(Dispatch.new(self, visitor), Config.render_options).render(content)
       end
       def markdown
         @markdown

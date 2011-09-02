@@ -1,9 +1,17 @@
 require "cucumber/ast/step_invocation"
 require "cucumber/ast/step"
+require "cucumber/ast/doc_string"
 require "cucumber/step_match"
+require "gherkin/rubify"
+
 
 module DocTests
   module Stepper
+    class Rubifier
+      include ::Gherkin::Rubify
+      
+    end
+    
     def self.visit_step(visitor, step, collection, scenario)
       step.step_collection = collection
       step.feature_element = scenario
@@ -20,11 +28,25 @@ module DocTests
     end
     
     def self.visit_text(visitor, counter, text, collection, scenario)
+      multiline_arg = nil
+      lines = text.split("\n")
+      text = lines.shift
+      if lines.length > 1
+        multi = lines.join("\n")
+        puts multi[0,3]
+        puts  multi[-3,3]
+        if multi[0,3] == '"""' and multi[-3,3] == '"""'
+          multi = multi[3..-4]
+          puts multi
+        end
+        multiline_arg = ::Cucumber::Ast::DocString.new(multi)
+      end
+      
       parts = text.split(" ")
       keyword = parts.shift # e.g. Given
       name = parts.join(" ")
 
-      step = ::Cucumber::Ast::Step.new(counter, keyword+ " ", name)
+      step = ::Cucumber::Ast::Step.new(counter, keyword+ " ", name, multiline_arg)
       visit_step(visitor, step, collection, scenario)
     end
     

@@ -53,19 +53,20 @@ module DocTests
     end
 
     def current_send(method_name, array)
+      #puts "#{method_name}: #{array.inspect}"
+      
       current_elements.each do |instance|
         unless instance.respond_to?(method_name)
           case method_name
           when 'normal_text', 'entity'
-            instance.meta(method_name, array)if instance.respond_to?('meta')
+            instance.meta(method_name, array) if instance.respond_to?('meta')
           else
-            instance.generic(method_name, array)if instance.respond_to?('generic')
+            instance.generic(method_name, array) if instance.respond_to?('generic')
           end
         end
       end
       
       current_elements.each do |instance|
-        #puts "#{method_name}: #{array.inspect}"
         if instance.respond_to?(method_name)
           
           instance.send(method_name, *array)

@@ -6,3 +6,51 @@ For example...
 ### GET /test
 
 * Then I should see "Hello World"
+
+----------------
+
+## Posting it
+
+Now, this should let us POST
+
+### POST /info
+
+```
+one:
+  name: First Param
+  description: This gets submitted
+  sub:
+    name: Within that
+two:
+  name: Second Param
+  whatever: 4
+```
+
+* Then I should see JSON key "method" with value "post"
+* And I should see JSON key "params/one/sub/name" with value "Within that"
+
+----------------
+
+## put and delete
+
+Now, this should let us POST
+
+### PUT /info
+
+```
+one:
+  name: First Param
+  description: This gets submitted
+  sub:
+    name: Within that
+two:
+  name: Second Param
+  whatever: 4
+```
+
+* Then I should see JSON key "method" with value "put"
+* And I should see JSON key "params/two/name" with value "Second Param"
+
+### DELETE /info
+
+* Then I should see JSON key "method" with value "delete"

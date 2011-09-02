@@ -9,6 +9,7 @@ module DocTests
         #include Rack::Test::Methods
         
         attr_reader :cmd, :url
+        attr_accessor :data
         def initialize(cmd, url)
           @cmd = cmd
           @url = url
@@ -27,14 +28,13 @@ module DocTests
           when :get
             rack.get url
           when :delete
-            
+            rack.delete url
           when :post
-            
+            rack.post url, data
           when :put
-            
+            rack.put url, data
           else
-            raise "Unknown method"            
-          
+            raise "Unknown request method"
           end
         end
       end
@@ -76,6 +76,14 @@ module DocTests
         return unless level == 3
         execute!
         @command = self.class.parse_command(text)
+      end
+      
+      def block_code(code, language)
+        return unless @command
+        language ||= "YML"
+        parent.visit_block("Parsing request #{language} block") do
+          @command.data = DocTests::Parsers.send("#{language.downcase.gsub(' ', '_')}_to_hash", code)
+        end
       end
       
       def generic(method_name, args)

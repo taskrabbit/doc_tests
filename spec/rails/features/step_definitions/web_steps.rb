@@ -97,11 +97,14 @@ When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"(?: within "([^"]*)")?$/ do 
   end
 end
 
-Then /^(?:|I )should see JSON:$/ do |expected_json|
+Then /^(?:|I )should see JSON key "(.+)" with value "(.+)"$/ do |key, value|
   require 'json'
-  expected = JSON.pretty_generate(JSON.parse(expected_json))
-  actual   = JSON.pretty_generate(JSON.parse(response.body))
-  expected.should == actual
+  hash = JSON.parse(page.body)
+  key.split("/").each do |sub|
+    raise "Unknown key: #{sub}" unless hash.is_a? Hash and hash.key?(sub)
+    hash = hash[sub]
+  end
+  hash.to_s.should == value.to_s
 end
 
 Then /^(?:|I )should see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|

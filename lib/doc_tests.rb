@@ -19,5 +19,7 @@ require 'doc_tests/cucumber/main'
 require 'doc_tests/elements/cucumber'
 require 'doc_tests/elements/request'
 
+require 'doc_tests/parsers/yml'
+
 DocTests::Config.register(DocTests::Elements::Cucumber)
 DocTests::Config.register(DocTests::Elements::Request)
