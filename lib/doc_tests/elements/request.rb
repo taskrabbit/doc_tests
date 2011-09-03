@@ -1,8 +1,10 @@
-require 'rack/test'
-
 module DocTests
   module Elements
     class Request < DocTests::Element
+      def self.rack
+        ::Capybara.current_session.driver
+      end
+      
       attr_reader :command
       
       class Command
@@ -13,12 +15,12 @@ module DocTests
           @url = url
         end
         
-        def rack
-          ::Capybara.current_session.driver
-        end
-        
         def title
           "#{cmd.to_s.upcase} #{url}"
+        end
+        
+        def rack
+          Request.rack
         end
         
         def execute!
@@ -107,10 +109,9 @@ module DocTests
       
       def list_item(text, type)
         @in_list = true
-        parent.visit_block("Header -> #{text.strip}") do
+        parent.visit_block("Request Header -> #{text.strip}") do
           pieces = text.split(":")
           if pieces.size == 2
-            @in_list = true
             @command.header(pieces[0].strip, pieces[1].strip)
           elsif @in_list
             raise "#{text} is an invalid header. Example... Authorization: token"

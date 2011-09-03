@@ -1,0 +1,23 @@
+# Responses
+
+We should be able to get the response on any request or cucumber visit or whatever
+
+* When I go to the test page
+
+Now that request is in the buffer so we should be able to assert some stuff
+
+### 200 OK
+
+For example the response code
+
+### More
+
+This will not do anything because the header isn't right
+
+### HTML Response
+This will and we use a list to check more things
+
+* Status Code: 200
+* Content-Type: text/html
+
+Yeah!

@@ -7,11 +7,13 @@ class TestController < ActionController::Base
   def info
     # talk about what was submitted
     headers = {}
-    ['Accept', 'Authorization', 'Content-type'].each do |name|
+    ['Accept', 'Authorization'].each do |name|
       headers[name] = request.headers[name]
     end
+    headers['Content-Type'] = request.content_type.to_s
     
     render :json => {
+      :format => request.format,
       :method => request.method,
       :headers => headers,
       :params => params

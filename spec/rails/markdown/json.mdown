@@ -1,0 +1,16 @@
+# JSON
+
+Testing out JSON calls
+
+### POST /info
+
+* Content-Type: application/json
+
+```json
+{
+  "one": "something here"
+}
+```
+
+* Then I should see JSON key "method" with value "post"
+* And I should see JSON key "params/one" with value "something here"
