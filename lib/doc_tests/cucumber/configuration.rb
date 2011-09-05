@@ -4,6 +4,11 @@ module DocTests
   module Cucumber
     class Configuration < ::Cucumber::Cli::Configuration
 
+      def initialize(out_stream = STDOUT, error_stream = STDERR)
+        super(out_stream, error_stream)
+        @options = DocTests::Cucumber::Options.new(@out_stream, @error_stream, :default_profile => 'default')
+      end
+
       def paths
         paths = super
         if @options[:paths].empty? or @options[:paths] == ['features']
