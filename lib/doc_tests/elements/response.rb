@@ -138,13 +138,34 @@ module DocTests
         hash2 = to_hash.visit(parent, rack.response.body)
         parent.visit_block("Response Verification") do
           method = @response_compare || DocTests::Config.response_compare
+          set = Set.new(DocTests::Config.excluded_keys)
+          hash1 = Differ.exclude_keys(hash1, set)
+          hash2 = Differ.exclude_keys(hash2, set)
           Differ.send("#{method.to_s.downcase.strip}!", hash1, hash2)
         end
       end
       
     end
   
-    class Differ    
+    class Differ
+      def self.exclude_keys(obj, keys)
+        if obj.is_a? Hash
+          out = {}
+          obj.each do |key, value|
+            out[key] = exclude_keys(obj[key], keys) unless keys.include?(key.to_s)
+          end
+          out
+        elsif obj.is_a? Array
+          out = []
+          obj.each do |value|
+            out <<  exclude_keys(value, keys)
+          end
+          out
+        else
+          obj
+        end
+      end
+      
       def self.equal!(needles, haystack)
         haystack.should == needles
       end

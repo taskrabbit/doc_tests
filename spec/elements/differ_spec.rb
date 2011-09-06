@@ -3,6 +3,19 @@ require "spec_helper"
 module DocTests
   module Elements
     describe Differ do
+      describe ".exclude_keys" do
+        it "should remove the given keys" do
+          DocTests::Config.excluded_keys.should =~ ["id", "created_at", "updated_at"]
+          hash = {:name => "ok", :id => 4, :sub => {:two => 2, :deep => {:created_at => Time.now}}}
+          remo = {:name => "ok", :sub => {:two => 2, :deep => {}}}
+          Differ.exclude_keys(hash, Set.new(DocTests::Config.excluded_keys)).should == remo
+        end
+        it "works for hashes inside arrays" do
+          arr = ["ok", {:id => 3, :name => "one"}]
+          rem = ["ok", {:name => "one"}]
+          Differ.exclude_keys(arr, Set.new(DocTests::Config.excluded_keys)).should == rem
+        end
+      end
       describe ".equal!" do
         it "should check equality" do
           haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}}

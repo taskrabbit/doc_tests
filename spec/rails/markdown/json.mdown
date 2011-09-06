@@ -47,3 +47,14 @@ But we can also check for just a little bit of it by resetting the comparison (b
       "params": { "one": "something here" },
       "format": { "symbol":"json", "synonyms": ["application/jsonrequest"] }    
     }
+    
+### Ignored item response
+
+It will ignore id, created_at and updated_at
+
+    {
+      "method": "post",
+      "id": 56,
+      "params": { "one": "something here" },
+      "format": { "symbol":"json", "synonyms": ["application/jsonrequest"], "updated_at": 63636363 }    
+    }
