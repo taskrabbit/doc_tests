@@ -93,7 +93,7 @@ module DocTests
         return unless @command
         language ||= "YML"
         p = Parser.new(language, ["Request Data", "Hash"])
-        @command.data = p.visit(parent, code)
+        @command.data = p.visit(parent, code, code)
         execute!
       end
       

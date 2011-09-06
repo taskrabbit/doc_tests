@@ -223,3 +223,8 @@ end
 Then /^show me the page$/ do
   save_and_open_page
 end
+
+Then /^print the page$/ do
+  puts page.body
+end
+

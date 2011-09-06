@@ -22,5 +22,11 @@ module DocTests
     def rack_header_value_to_tester(rack)
       RackHeaderTester.new(rack)
     end
+    
+    def rack_response_to_response_data(data)
+      # best completely generic comparision I can think of it to just remove whitespace
+      #data.to_s.gsub(/\s+/, "")
+      data
+    end
   end
 end

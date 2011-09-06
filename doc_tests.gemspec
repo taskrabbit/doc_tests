@@ -23,6 +23,8 @@ Gem::Specification.new do |s|
   s.add_dependency('cucumber', '=0.10.7')
   s.add_dependency('gherkin', '=2.4.0')
   
+  s.add_dependency('nokogiri', '> 0.0.0')
+  
   s.add_development_dependency('rails', '=2.3.10')
   s.add_development_dependency('rspec', '=1.3.0')
   s.add_development_dependency('rspec-rails', '=1.3.2')

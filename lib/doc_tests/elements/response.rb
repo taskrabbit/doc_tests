@@ -74,6 +74,30 @@ module DocTests
         @in_list = false
       end
       
+      def get_response_parser(language)
+        try = []
+        try << language
+        
+        content_type = DocTests::Parsers.rack_content_type_to_string(rack)
+        if content_type
+          try << content_type
+          pieces = content_type.split("/")
+          try << pieces.last if pieces.size > 1
+        end
+        
+        try << "Rack Response"
+        Parser.new(try, ["Response Data", "Hash"])
+      end
+      
+      def block_code(code, language)
+        to_hash = get_response_parser(language)
+        hash1 = to_hash.visit(parent, rack.response.body)
+        hash2 = to_hash.visit(parent, code)
+        parent.visit_block("Response Verification") do
+          hash1.should == hash2
+        end
+      end
+      
     end
   end
 end
