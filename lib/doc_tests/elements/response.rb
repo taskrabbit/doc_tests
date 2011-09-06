@@ -87,18 +87,65 @@ module DocTests
         end
         
         try << "Rack Response"
-        Parser.new(try, ["Response Data", "Hash"])
+        Parser.new(try, ["Hash"])
       end
       
       def block_code(code, language)
         to_hash = get_response_parser(language)
-        hash1 = to_hash.visit(parent, rack.response.body)
-        hash2 = to_hash.visit(parent, code)
+        hash1 = to_hash.visit(parent, code)
+        hash2 = to_hash.visit(parent, rack.response.body)
         parent.visit_block("Response Verification") do
-          hash1.should == hash2
+          Differ.include!(hash1, hash2)
         end
       end
       
+    end
+  
+    class Differ    
+      def self.equal!(needles, haystack)
+        haystack.should == needles
+      end
+      
+      def self.include!(needles, haystack)
+        errors = include_check(needles, haystack)
+        raise errors.join("\n") unless errors.empty?        
+      end
+      
+      def self.include_check(needles, haystack)
+        errors = []
+        
+        if haystack.is_a? Hash and needles.is_a? Hash
+         needles.each do |key, value|
+           if not haystack.has_key?(key)
+             errors << "/#{key} not found!"
+           else
+             include_check(value, haystack[key]).each do |error|
+               errors << "/#{key}#{error}"
+             end
+           end
+         end
+        elsif haystack.is_a? Array and needles.is_a? Array
+          copy = haystack.clone
+          needles.each do |n_value|
+            found = -1
+            copy.each_with_index do |h_value, i|
+              if include_check(n_value, h_value).size == 0
+                found = i
+                break
+              end
+            end
+            if found >= 0
+              copy.delete_at(found)
+            else
+              errors << "/item not found in list.\nvalue: #{n_value.inspect}\nwithin: #{haystack.inspect}"
+            end
+          end
+        elsif needles != haystack
+          errors << " is not equal\nexpected: #{needles.inspect}\ngot: #{haystack.inspect}"
+        end
+
+        errors
+      end
     end
   end
 end

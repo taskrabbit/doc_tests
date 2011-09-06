@@ -8,5 +8,10 @@ module DocTests
       doc = Nokogiri::XML(html)
       doc.to_hash
     end
+    
+    def xml_to_request_data(xml)
+      xml
+    end
+    
   end
 end

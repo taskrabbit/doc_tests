@@ -19,7 +19,7 @@ Testing out JSON calls
 
 * Content-Type: application/json
 
-The we should be getting this...
+Then we should be getting this...
 
     {
       "method": "post",
@@ -37,3 +37,10 @@ The we should be getting this...
                 }      
     }
 
+But we can also check for just a little bit of it
+
+    {
+      "method": "post",
+      "params": { "one": "something here" },
+      "format": { "symbol":"json", "synonyms": ["application/jsonrequest"] }    
+    }
