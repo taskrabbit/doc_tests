@@ -18,6 +18,7 @@ Testing out JSON calls
 ### 200 OK
 
 * Content-Type: application/json
+* Compare: Equal
 
 Then we should be getting this...
 
@@ -37,7 +38,9 @@ Then we should be getting this...
                 }      
     }
 
-But we can also check for just a little bit of it
+### Response
+
+But we can also check for just a little bit of it by resetting the comparison (because include is the default)
 
     {
       "method": "post",

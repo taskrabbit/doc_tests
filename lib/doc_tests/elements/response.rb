@@ -92,16 +92,20 @@ module DocTests
         
         pieces = text.split(":")
         if pieces.size == 2
-          p = Parser.new(["Rack #{pieces[0]}", "Rack Header Value"], ["tester", "string"])
-          check = p.visit(parent, rack)
-          parent.visit_block("Response Property -> #{text.strip}") do
-            value = pieces[1].strip
-            if check.is_a? Parsers::Tester
-              check.test(pieces[0],value)
-            else
-              check.should == value
+          if pieces[0].downcase == "compare"
+            @response_compare = pieces[1]
+          else
+            p = Parser.new(["Rack #{pieces[0]}", "Rack Header Value"], ["tester", "string"])
+            check = p.visit(parent, rack)
+            parent.visit_block("Response Property -> #{text.strip}") do
+              value = pieces[1].strip
+              if check.is_a? Parsers::Tester
+                check.test(pieces[0],value)
+              else
+                check.should == value
+              end
             end
-          end 
+          end
         elsif @in_list
           parent.visit_block("Response Property -> #{text.strip}") do
             raise "#{text} is an invalid response property. Example... Content-Type: text/html"
@@ -133,7 +137,8 @@ module DocTests
         hash1 = to_hash.visit(parent, code)
         hash2 = to_hash.visit(parent, rack.response.body)
         parent.visit_block("Response Verification") do
-          Differ.include!(hash1, hash2)
+          method = @response_compare || DocTests::Config.response_compare
+          Differ.send("#{method.to_s.downcase.strip}!", hash1, hash2)
         end
       end
       

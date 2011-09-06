@@ -1,0 +1,63 @@
+require "spec_helper"
+
+module DocTests
+  module Elements
+    describe Differ do
+      describe ".equal!" do
+        it "should check equality" do
+          haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}}
+          needles = { :two => "2", :sub => {:deep => {:six => "6"}, :four => "4", :five => "5"}, :one => "1" }
+          lambda { Differ.equal!(needles, haystack) }.should_not raise_error
+        end
+        it "should raise error if more in haystack" do
+          haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}, :extra => "7"}
+          needles = { :two => "2", :sub => {:deep => {:six => "6"}, :four => "4", :five => "5"}, :one => "1" }
+          lambda { Differ.equal!(needles, haystack) }.should raise_error
+        end
+        it "should raise error if less in haystack" do
+          haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}}
+          needles = { :two => "2", :sub => {:deep => {:six => "6"}, :four => "4", :five => "5"}, :one => "1", :extra => "7"}
+          lambda { Differ.equal!(needles, haystack) }.should raise_error
+        end
+      end
+      
+      describe ".include_check" do
+        # returns an error message
+        it "should check equality" do
+          haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}}
+          needles = { :two => "2", :sub => {:deep => {:six => "6"}, :four => "4", :five => "5"}, :one => "1" }
+          Differ.include_check(needles, haystack).should be_empty
+        end
+        it "should not raise error if more in haystack" do
+          haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}, :extra => "7"}
+          needles = { :two => "2", :sub => {:deep => {:six => "6"}, :four => "4", :five => "5"}, :one => "1" }
+          Differ.include_check(needles, haystack).should be_empty
+        end
+        it "should raise error if less in haystack" do
+          haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}}
+          needles = { :two => "2", :sub => {:deep => {:six => "6"}, :four => "4", :five => "5"}, :one => "1", :extra => "8"}
+          Differ.include_check(needles, haystack).should_not be_empty
+        end
+        it "should work deeply yes" do
+          haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6", :extra => "9"}}}
+          needles = { :two => "2", :sub => {:deep => {:six => "6"}, :four => "4", :five => "5"}, :one => "1" }
+          Differ.include_check(needles, haystack).should be_empty
+        end
+        it "should report deeply when not found" do
+          haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}}
+          needles = { :two => "2", :sub => {:deep => {:six => "6", :extra => "9"}, :four => "4", :five => "5"}, :one => "1" }
+          errors = Differ.include_check(needles, haystack)
+          errors.size.should == 1
+          errors.first.should == "/sub/deep/extra not found!"
+        end
+        it "should report deeply when not found" do
+          haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}}
+          needles = { :two => "2", :sub => {:deep => {:six => "7"}, :four => "4", :five => "5"}, :one => "1" }
+          errors = Differ.include_check(needles, haystack)
+          errors.size.should == 1
+          errors.first.should == "/sub/deep/six is not equal\nexpected: \"7\"\ngot: \"6\""
+        end
+      end
+    end
+  end
+end

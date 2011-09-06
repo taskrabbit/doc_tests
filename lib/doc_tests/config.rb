@@ -23,6 +23,13 @@ module DocTests
     def elements
       @elements ||= []
     end
+    
+    def response_compare=val
+      @response_compare = val      
+    end
+    def response_compare
+      @response_compare ||= :include
+    end
   end
 end
 
