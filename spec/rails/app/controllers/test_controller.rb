@@ -12,7 +12,9 @@ class TestController < ActionController::Base
     end
     headers['Content-Type'] = request.content_type.to_s
     
-    render :json => {
+    symbol = request.format.to_s.include?("xml") ? :xml : :json
+    
+    render symbol => {
       :format => request.format,
       :method => request.method,
       :headers => headers,
