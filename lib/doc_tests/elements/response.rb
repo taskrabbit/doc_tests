@@ -45,6 +45,7 @@ module DocTests
       
       def before_list_item?(text, type)
         return true if @in_list
+        return false unless text
         text.split(":").size == 2
       end
       

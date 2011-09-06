@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 module DocTests
   module Parsers
     extend self

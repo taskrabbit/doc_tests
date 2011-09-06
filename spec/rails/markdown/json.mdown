@@ -14,3 +14,26 @@ Testing out JSON calls
 
 * Then I should see JSON key "method" with value "post"
 * And I should see JSON key "params/one" with value "something here"
+
+### 200 OK
+
+* Content-Type: application/json
+
+The we should be getting this...
+
+    {
+      "method": "post",
+      "params": { "action": "info", 
+                  "one": "something here", 
+                  "controller": "test"
+                },
+      "format": { "symbol":"json",
+                  "string": "application/json",
+                  "synonyms": ["text/x-json", "application/jsonrequest"]
+                },
+      "headers": { "Authorization": null,
+                   "Accept": null,
+                   "Content-Type": "application/json"
+                }      
+    }
+
