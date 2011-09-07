@@ -39,9 +39,7 @@ module DocTests
       end
       
       def support_to_load
-        puts cuke_support_to_load
-        puts doc_support_to_load
-        cuke_support_to_load + doc_support_to_load
+        doc_support_to_load + cuke_support_to_load
       end
       
       private

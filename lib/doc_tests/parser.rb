@@ -1,5 +1,15 @@
 module DocTests
   class Parser
+    def module_check
+      DocTests::Parsers
+    end
+    def build_method(source, dest)
+      "#{source}_to_#{dest}"
+    end
+    def args_count
+      1
+    end
+    
     attr_reader :from, :to
     def initialize(from, to, options = {})
       @from = from.is_a?(Array) ? from.collect(&:to_s) : [from.to_s] 
@@ -30,9 +40,9 @@ module DocTests
         @to.each do |t|
           source = self.class.fixup(f)
           dest = self.class.fixup(t)
-          meth = "#{source}_to_#{dest}"
+          meth = build_method(source, dest)
           unless tried.include? meth
-            return [meth, [meth]] if DocTests::Parsers.respond_to?(meth)
+            return [meth, [meth]] if module_check.respond_to?(meth)
             tried << meth
           end
         end
@@ -43,11 +53,13 @@ module DocTests
     
     def get(*args)
       meth, tried = self.find
+      has_default = args.size > args_count
+      default = args.pop if has_default
       if meth.nil?
-        return args.second if args.size > 1
+        return default if has_default
         raise "Could not parse to #{@to.first}. Tried: #{tried.join(', ')}"
       else
-        DocTests::Parsers.send(meth, args.first)
+        module_check.send(meth, *args)
       end
     end
   end

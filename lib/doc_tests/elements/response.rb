@@ -56,11 +56,11 @@ module DocTests
   
       def self.parse_code(text)
         pieces = text.split(" ")
-        return nil unless pieces.size == 2
-        code = pieces[0].to_i
+        return nil unless pieces.size >= 2
+        code = pieces.shift.to_i
         val = CODES[code]
         return nil unless val
-        return nil unless val.downcase == pieces[1].downcase
+        return nil unless val.downcase == pieces.join(" ").downcase
         [code, val]
       end
       
@@ -172,7 +172,20 @@ module DocTests
       
       def self.include!(needles, haystack)
         errors = include_check(needles, haystack)
-        raise errors.join("\n") unless errors.empty?        
+        
+        bad = []
+        errors.each do |error_hash|
+          if error_hash[:message]
+            bad << "#{error_hash[:key]} error_hash[:message]"
+          else
+            # value check
+            unless DocTests::Equivalency.key_values?(error_hash[:key], error_hash[:expected], error_hash[:got])
+              bad << "#{error_hash[:key]} is not equal\nexpected: #{error_hash[:expected].inspect}\ngot: #{error_hash[:got].inspect}"
+            end
+          end
+        end
+        
+        raise bad.join("\n") unless bad.empty?
       end
       
       def self.include_check(needles, haystack)
@@ -181,10 +194,15 @@ module DocTests
         if haystack.is_a? Hash and needles.is_a? Hash
          needles.each do |key, value|
            if not haystack.has_key?(key)
-             errors << "/#{key} not found!"
+             errors << {:key => key.to_s, :messsage => "not found!"}
            else
              include_check(value, haystack[key]).each do |error|
-               errors << "/#{key}#{error}"
+               if error[:key].nil?
+                 error[:key] = key.to_s
+               else
+                 error[:key] = key.to_s + "/" + error[:key]
+               end
+               errors << error
              end
            end
          end
@@ -201,11 +219,11 @@ module DocTests
             if found >= 0
               copy.delete_at(found)
             else
-              errors << "/item not found in list.\nvalue: #{n_value.inspect}\nwithin: #{haystack.inspect}"
+              errors << {:key => "item", :message => "not found in list.\nvalue: #{n_value.inspect}\nwithin: #{haystack.inspect}"}
             end
           end
         elsif needles != haystack
-          errors << " is not equal\nexpected: #{needles.inspect}\ngot: #{haystack.inspect}"
+          errors << {:key => nil, :expected => needles, :got => haystack}
         end
 
         errors

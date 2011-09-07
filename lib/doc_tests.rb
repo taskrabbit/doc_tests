@@ -26,6 +26,8 @@ require 'doc_tests/parsers/html'
 require 'doc_tests/parsers/rack'
 require 'doc_tests/parsers/nokogiri'
 
+require 'doc_tests/equivalency'
+
 require 'doc_tests/elements/cucumber'
 require 'doc_tests/elements/request'
 require 'doc_tests/elements/response'

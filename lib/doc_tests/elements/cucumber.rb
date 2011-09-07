@@ -15,15 +15,21 @@ module DocTests
       end
       
       def list_item(text, list_type)
-        if not @in_list and not @matching and self.class.step?(text)
-          @matching = true
-          run_step!(text)
+        return if text.nil?
+        text = text.strip
+        return if text.length == 0
+        
+        if not @in_list and not @matching
+          @matching = self.class.step?(text)
         end
+        
+        if @matching
+          run_step!(text)
+        elsif @keyword
+          run_step!("#{@keyword} #{text[0,1].downcase}#{text[1..-1]}")
+        end
+        
         @in_list = true
-      end
-      
-      def normal_text(text)
-        run_step!(text) if @matching
       end
       
       def list(contents, list_type)
@@ -32,8 +38,20 @@ module DocTests
         @matching = false
       end
       
+      def header(text, level)
+        @keyword = nil
+        check = DocTests::Config.cucumber_headers || {}
+        check.each do |keyword, array|
+          array.each do |word|
+            if text.strip == word
+              @keyword = keyword.to_s.capitalize
+              break
+            end
+          end
+        end
+      end
+      
       def run_step!(text)
-        return if not text or text.strip.length == 0
         parent.visit_text(text)
       end
     end

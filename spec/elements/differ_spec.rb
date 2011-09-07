@@ -61,14 +61,14 @@ module DocTests
           needles = { :two => "2", :sub => {:deep => {:six => "6", :extra => "9"}, :four => "4", :five => "5"}, :one => "1" }
           errors = Differ.include_check(needles, haystack)
           errors.size.should == 1
-          errors.first.should == "/sub/deep/extra not found!"
+          errors.first.should == {:key=>"sub/deep/extra", :messsage=>"not found!"}
         end
         it "should report deeply when not found" do
           haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}}
           needles = { :two => "2", :sub => {:deep => {:six => "7"}, :four => "4", :five => "5"}, :one => "1" }
           errors = Differ.include_check(needles, haystack)
           errors.size.should == 1
-          errors.first.should == "/sub/deep/six is not equal\nexpected: \"7\"\ngot: \"6\""
+          errors.first.should == {:key=>"sub/deep/six", :expected=>"7", :got=>"6"}
         end
       end
     end

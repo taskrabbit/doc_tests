@@ -36,6 +36,8 @@ module DocTests
         Elements::Response.parse_code("Created").should == nil
         Elements::Response.parse_code("201 Created Something").should == nil
         Elements::Response.parse_code("201 Created2").should == nil
+        
+        Elements::Response.parse_code("422 Unprocessable Entity").should == [422, "Unprocessable Entity"]
       end
     end
   end

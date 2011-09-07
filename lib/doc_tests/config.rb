@@ -42,6 +42,14 @@ module DocTests
     def exclude_keys(*keys)
       self.excluded_keys = keys
     end
+    
+    def cucumber_headers
+      @cucumber_headers ||= {:given => ["Setup"], :then => ["Results", "Result"]}
+    end
+    def cucumber_headers=hash
+      @cucumber_headers = hash | {}
+      
+    end
   end
 end
 
