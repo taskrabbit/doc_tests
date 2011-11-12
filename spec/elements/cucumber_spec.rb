@@ -65,6 +65,19 @@ module DocTests
       end
     end
     
+    describe ".step" do
+      it "should return Given When or Then or And when found" do
+        Elements::Cucumber.step("Given something").should == "Given"
+        Elements::Cucumber.step("When something").should == "When"
+        Elements::Cucumber.step("Then something").should == "Then"
+        Elements::Cucumber.step("And something").should == "And"
+      end
+
+      it "should return nil when no prefix for steps are found" do
+        Elements::Cucumber.step("something").should == nil
+      end
+    end
+
     describe ".step?" do
       it "should return true if it looks like a step" do
         Elements::Cucumber.step?("Given something").should == true

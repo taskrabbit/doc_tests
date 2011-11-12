@@ -10,8 +10,13 @@ module DocTests
         true
       end
       
+      def self.step(text)
+        text =~ /^\s*(Given|When|Then|And) \S+/i
+        $1
+      end
+      
       def self.step?(text)
-        !(text =~ /^\s*(Given|When|Then|And) \S+/i).nil?
+        !step(text).nil?
       end
       
       def list_item(text, list_type)
@@ -20,13 +25,11 @@ module DocTests
         return if text.length == 0
         
         if not @in_list and not @matching
-          @matching = self.class.step?(text)
+          @matching = self.class.step(text)
         end
         
-        if @matching
+        if @matching or @keyword
           run_step!(text)
-        elsif @keyword
-          run_step!("#{@keyword} #{text[0,1].downcase}#{text[1..-1]}")
         end
         
         @in_list = true
@@ -35,7 +38,7 @@ module DocTests
       def list(contents, list_type)
         # done with the list
         @in_list = false
-        @matching = false
+        @matching = nil
       end
       
       def header(text, level)
@@ -52,7 +55,12 @@ module DocTests
       end
       
       def run_step!(text)
-        parent.visit_text(text)
+        if self.class.step?(text)
+          parent.visit_text(text)
+        else
+          before = @keyword || @matching || "Given"
+          parent.visit_text("#{before} #{text[0,1].downcase}#{text[1..-1]}")
+        end
       end
     end
   end
