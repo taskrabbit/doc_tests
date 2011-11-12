@@ -25,6 +25,7 @@ require 'doc_tests/parsers/xml'
 require 'doc_tests/parsers/html'
 require 'doc_tests/parsers/rack'
 require 'doc_tests/parsers/nokogiri'
+require 'doc_tests/parsers/form_urlencoded'
 
 require 'doc_tests/equivalency'
 
