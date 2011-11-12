@@ -6,7 +6,7 @@ This is an add-on to Cucumber that skips the Gherkin parser and uses the redcarp
 
 ## Getting Started
 
-The best way to get started in your Rails project after installing the gem is to create a /markdown folder and add a .mdown file. See the Rails project included within /spec for some examples. You should then be able to run:
+The best way to get started in your Rails project after installing the gem is to create a /markdown folder and add a .mdown file. You should then be able to run:
     
     bundle exec doctests
 
@@ -23,6 +23,12 @@ It can also be used completely separate from the normal Cucumber steps and confi
     %>
     default: <%= std_opts %>
     wip: --tags @wip:3 --wip markdown
+
+## Examples
+
+See the Rails project included within /spec for some examples. 
+
+The documentation at http://taskrabbit.github.com is executable with doctests.
 
 ### TODO
 
