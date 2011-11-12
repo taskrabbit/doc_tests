@@ -148,6 +148,10 @@ module DocTests
     end
   
     class Differ
+      
+      SKIP_MATCHER    = "^<<.*>>$"
+      BETWEEN_MATCHER = '%{BETWEEN ([\d\.]+) AND ([\d\.]+)}'
+
       def self.exclude_keys(obj, keys)
         if obj.is_a? Hash
           out = {}
@@ -166,6 +170,20 @@ module DocTests
         end
       end
       
+      def self.skip?(value)
+        value =~ /#{SKIP_MATCHER}/
+      end
+      
+      def self.between?(value, returned_value)
+        if value =~ /#{BETWEEN_MATCHER}/
+          $1.to_f <= returned_value.to_f and returned_value.to_f <= $2.to_f
+        end
+      end
+      
+      def self.evaluated_value?(value, returned_value)
+        skip?(value) or between?(value, returned_value)
+      end
+      
       def self.equal!(needles, haystack)
         haystack.should == needles
       end
@@ -176,7 +194,7 @@ module DocTests
         bad = []
         errors.each do |error_hash|
           if error_hash[:message]
-            bad << "#{error_hash[:key]} error_hash[:message]"
+            bad << "#{error_hash[:key]} #{error_hash[:message]}"
           else
             # value check
             unless DocTests::Equivalency.key_values?(error_hash[:key], error_hash[:expected], error_hash[:got])
@@ -222,7 +240,7 @@ module DocTests
               errors << {:key => "item", :message => "not found in list.\nvalue: #{n_value.inspect}\nwithin: #{haystack.inspect}"}
             end
           end
-        elsif needles != haystack
+        elsif !evaluated_value?(needles, haystack) and needles != haystack
           errors << {:key => nil, :expected => needles, :got => haystack}
         end
 

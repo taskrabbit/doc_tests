@@ -35,6 +35,53 @@ module DocTests
       end
       
       describe ".include_check" do
+        
+        context "when using skipping matcher" do
+          it "should check equality" do
+            haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}}
+            needles = { :two => "2", :sub => {:deep => {:six => "6"}, :four => "4", :five => "5"}, :one => "<<some value to skip>>" }
+            Differ.include_check(needles, haystack).should be_empty
+          end
+
+          it "should raise error if less in haystack" do
+            haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}}
+            needles = { :two => "2", :sub => {:deep => {:six => "6"}, :four => "4", :five => "5"}, :one => "1", :extra => "<<some value to skip>>"}
+            Differ.include_check(needles, haystack).should_not be_empty
+          end
+
+          it "should not raise error if value matches the the skipping matcher" do
+            haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}, :extra => "7"}
+            needles = { :two => "2", :sub => {:deep => {:six => "<<some value to skip>>"}, :four => "4", :five => "5"}, :one => "1" }
+            Differ.include_check(needles, haystack).should be_empty
+          end
+        end
+        
+        context "when using the between matcher" do
+          it "should check equality" do
+            haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}}
+            needles = { :two => "2", :sub => {:deep => {:six => "6"}, :four => "4", :five => "5"}, :one => "%{BETWEEN 0.5 AND 1.5}" }
+            Differ.include_check(needles, haystack).should be_empty
+          end
+
+          it "should be valid when including the value" do
+            haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}}
+            needles = { :two => "2", :sub => {:deep => {:six => "6"}, :four => "4", :five => "5"}, :one => "%{BETWEEN 1 AND 2}" }
+            Differ.include_check(needles, haystack).should be_empty
+          end
+
+          it "should not be valid when not including the value" do
+            haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}}
+            needles = { :two => "2", :sub => {:deep => {:six => "6"}, :four => "4", :five => "5"}, :one => "%{BETWEEN 3 AND 2}" }
+            Differ.include_check(needles, haystack).should_not be_empty
+          end
+
+          it "should not raise error if value matches the the skipping matcher" do
+            haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}, :extra => "7"}
+            needles = { :two => "2", :sub => {:deep => {:six => "<<BETWEEN 5 AND 7>>"}, :four => "4", :five => "5"}, :one => "1" }
+            Differ.include_check(needles, haystack).should be_empty
+          end
+        end
+        
         # returns an error message
         it "should check equality" do
           haystack = { :one => "1", :two => "2", :sub => {:four => "4", :five => "5", :deep => {:six => "6"}}}
