@@ -1,0 +1,38 @@
+# doctests
+
+We needed a way to produce API documentation for our business partners that looked good enough, but more importantly, we wanted to know it was correct. Just as importantly, we wanted to treat that documentation like a contract, assuring that it would continue to be correct. To do that, we created doctests.
+
+This is an add-on to Cucumber that skips the Gherkin parser and uses the redcarpet Markdown parser. By doing this, you can write much more freeform tests/documentation than the normal Given/When/Then business. Furthermore, not all of the Markdown actually has to be "code" and can just be explanations or whatever. The triggers to running actual code on specific elements are configurable, but some defaults are included.
+
+## Getting Started
+
+The best way to get started in your Rails project after installing the gem is to create a /markdown folder and add a .mdown file. See the Rails project included within /spec for some examples. You should then be able to run:
+    
+    bundle exec doctests
+
+This will work and use the built-in Cucumber steps and engine. Currently, the version of Cucumber is severely limited (0.10.7)
+
+You can do the same stuff as Cucumber to run a certain file
+
+    bundle exec doctests markdown/mydoc.mdown
+    
+It can also be used completely separate from the normal Cucumber steps and config. It will look for a doctests.yml (instead of cucumber.yml) and use that. using the command line or that config file, you can note that it's in standalone mode. Here is our config file.
+
+    <%
+    std_opts = "--format pretty markdown STANDALONE=true --backtrace --strict --tags ~@wip"
+    %>
+    default: <%= std_opts %>
+    wip: --tags @wip:3 --wip markdown
+
+### TODO
+
+ * Document the built-in element triggers
+ * Document how to add custom elements
+ * Work with more versions of Cucumber
+ * Some sort of checksum to be sure all tests are running
+ 
+ 
+ 
+ 
+
+ Copyright (c) 2011 TaskRabbit, Inc., released under the MIT license
