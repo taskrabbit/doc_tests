@@ -26,9 +26,9 @@ module DocTests
         def execute!
           case cmd
           when :get
-            rack.get url
+            rack.get url, data
           when :delete
-            rack.delete url
+            rack.delete url, data
           when :post
             rack.post url, data
           when :put
@@ -39,7 +39,7 @@ module DocTests
         end
         
         def block?
-          cmd == :put or cmd == :post
+          cmd == :put or cmd == :post or cmd == :get
         end
         
         def header(key, value)
