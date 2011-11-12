@@ -150,7 +150,7 @@ module DocTests
     class Differ
       
       SKIP_MATCHER    = "^<<.*>>$"
-      BETWEEN_MATCHER = '%{BETWEEN ([\d\.]+) AND ([\d\.]+)}'
+      BETWEEN_MATCHER = /%\{BETWEEN ([\d\.]+) AND ([\d\.]+)\}/
 
       def self.exclude_keys(obj, keys)
         if obj.is_a? Hash
