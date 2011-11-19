@@ -1,0 +1,6 @@
+# Cucumber Tests in a Subfolder
+ 
+This test should pass
+
+ * Given we have cucumber support
+ * Then doc tests should work

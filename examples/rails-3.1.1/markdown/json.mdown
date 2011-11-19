@@ -1,0 +1,60 @@
+# JSON
+
+Testing out JSON calls
+
+### POST /info
+
+* Content-Type: application/json
+
+```json
+{
+  "one": "something here"
+}
+```
+
+* Then I should see JSON key "method" with value "post"
+* And I should see JSON key "params/one" with value "something here"
+
+### 200 OK
+
+* Content-Type: application/json
+* Compare: Equal
+
+Then we should be getting this...
+
+    {
+      "method": "post",
+      "params": { "action": "info", 
+                  "one": "something here", 
+                  "controller": "test"
+                },
+      "format": { "symbol":"json",
+                  "string": "application/json",
+                  "synonyms": ["text/x-json", "application/jsonrequest"]
+                },
+      "headers": { "Authorization": null,
+                   "Accept": null,
+                   "Content-Type": "application/json"
+                }      
+    }
+
+### Response
+
+But we can also check for just a little bit of it by resetting the comparison (because include is the default)
+
+    {
+      "method": "post",
+      "params": { "one": "something here" },
+      "format": { "symbol":"json", "synonyms": ["application/jsonrequest"] }    
+    }
+    
+### Ignored item response
+
+It will ignore id, created_at and updated_at
+
+    {
+      "method": "post",
+      "id": 56,
+      "params": { "one": "something here" },
+      "format": { "symbol":"json", "synonyms": ["application/jsonrequest"], "updated_at": 63636363 }    
+    }

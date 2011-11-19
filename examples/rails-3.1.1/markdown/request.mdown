@@ -1,0 +1,69 @@
+# Requests
+
+These allow us to do various requests.
+For example...
+
+### GET /test
+
+* Then I should see "Hello World"
+
+----------------
+
+## Posting it
+
+Now, this should let us POST
+
+### POST /info
+
+* Authorization: Here is my key
+
+```
+one:
+  name: First Param
+  description: This gets submitted
+  sub:
+    name: Within that
+two:
+  name: Second Param
+  whatever: 4
+```
+
+* Then I should see JSON key "method" with value "post"
+* And I should see JSON key "params/one/sub/name" with value "Within that"
+* And I should see JSON key "headers/Authorization" with value "Here is my key"
+
+----------------
+
+## put and delete
+
+Now, this should let us POST
+
+### PUT /info
+
+```
+one:
+  name: First Param
+  description: This gets submitted
+  sub:
+    name: Within that
+two:
+  name: Second Param
+  whatever: 4
+```
+
+* Then I should see JSON key "method" with value "put"
+* And I should see JSON key "params/two/name" with value "Second Param"
+
+### DELETE /info
+
+* Then I should see JSON key "method" with value "delete"
+
+### GET /info
+* Authorization: OK
+* Accept: application/json
+
+This line needs to be here so we know it's not more headers
+
+* Then I should see JSON key "method" with value "get"
+* And I should see JSON key "headers/Authorization" with value "OK"
+* And I should see JSON key "headers/Accept" with value "application/json"

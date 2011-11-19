@@ -1,0 +1,7 @@
+# Cucumber Tests
+ 
+This test should fail
+
+ * Given we do not have cucumber support
+ * Then doc tests should work
+ * Given we have cucumber support

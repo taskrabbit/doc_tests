@@ -1,0 +1,7 @@
+# Cucumber Tests
+ 
+This test should fail because of an unknown step
+
+ * Given I have never heard of this step
+ * Whatever this test should not be known
+ * Given we have cucumber support

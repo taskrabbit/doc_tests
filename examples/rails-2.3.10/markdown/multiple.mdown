@@ -1,0 +1,14 @@
+# Multiple Scenarios
+
+The Scenarios are divided by horizontal rules
+
+*******
+
+Here is the second one
+
+
+----
+
+# Number Three
+
+Here is the third one
