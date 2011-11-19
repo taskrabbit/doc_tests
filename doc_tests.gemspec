@@ -20,8 +20,9 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   
   s.add_dependency('redcarpet', '~> 2.0.0b3')
-  s.add_dependency('cucumber', '=0.10.7')
-  s.add_dependency('gherkin', '=2.4.0')
+  s.add_dependency('cucumber', '>=0.10.7')
+  s.add_dependency('gherkin', '>=2.6.5')
+  s.add_dependency('capybara', '>=0.3.9')
   
   s.add_dependency('nokogiri', '> 0.0.0')
   

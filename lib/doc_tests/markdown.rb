@@ -59,7 +59,7 @@ module DocTests
             content_options[:description],
             []
           )
-      gherkin_statement(::Gherkin::Formatter::Model::Scenario.new([], [], @keyword, @name, @description, @line))
+      gherkin_statement(::Gherkin::Formatter::Model::Scenario.new([], [], @keyword, @name, @description, @line, nil))
     end
     
     def step_count

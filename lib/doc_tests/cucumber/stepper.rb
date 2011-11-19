@@ -15,7 +15,7 @@ module DocTests
     def self.visit_step(visitor, step, collection, scenario)
       step.step_collection = collection
       step.feature_element = scenario
-      step.gherkin_statement(::Gherkin::Formatter::Model::Step.new([], step.keyword, step.name, step.line))
+      step.gherkin_statement(::Gherkin::Formatter::Model::Step.new([], step.keyword, step.name, step.line, nil, nil))
       step_invocation = step.step_invocation
       step_invocation.step_collection = collection
       collection.add_step_invocation(step_invocation)
