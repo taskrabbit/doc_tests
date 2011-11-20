@@ -99,7 +99,7 @@ end
 
 Then /^(?:|I )should see JSON key "(.+)" with value "(.+)"$/ do |key, value|
   require 'json'
-  hash = JSON.parse(page.body)
+  hash = JSON.parse(page.source)
   key.split("/").each do |sub|
     raise "Unknown key: #{sub}" unless hash.is_a? Hash and hash.key?(sub)
     hash = hash[sub]
@@ -225,6 +225,6 @@ Then /^show me the page$/ do
 end
 
 Then /^print the page$/ do
-  puts page.body
+  puts page.source
 end
 

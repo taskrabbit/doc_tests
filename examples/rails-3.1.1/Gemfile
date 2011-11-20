@@ -29,10 +29,12 @@ gem 'jquery-rails'
 # gem 'capistrano'
 
 # To use debugger
-# gem 'ruby-debug'
+gem 'ruby-debug'
 
 group :test do
   gem "cucumber", '=1.1.2'
   gem "cucumber-rails", '=1.2.0'
+  gem "rspec"
+  gem "launchy"
   gem 'doc_tests', :path => '../../'
 end

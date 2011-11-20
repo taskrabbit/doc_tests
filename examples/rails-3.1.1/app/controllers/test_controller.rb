@@ -14,9 +14,10 @@ class TestController < ActionController::Base
     
     symbol = request.format.to_s.include?("xml") ? :xml : :json
     
+    
     render symbol => {
       :format => request.format,
-      :method => request.method,
+      :method => request.method.downcase,
       :headers => headers,
       :params => params
     }

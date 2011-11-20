@@ -2,7 +2,7 @@
 
 Testing out JSON calls
 
-### POST /info
+### POST /info.json
 
 * Content-Type: application/json
 
@@ -22,21 +22,25 @@ Testing out JSON calls
 
 Then we should be getting this...
 
-    {
-      "method": "post",
-      "params": { "action": "info", 
-                  "one": "something here", 
-                  "controller": "test"
-                },
-      "format": { "symbol":"json",
-                  "string": "application/json",
-                  "synonyms": ["text/x-json", "application/jsonrequest"]
-                },
-      "headers": { "Authorization": null,
-                   "Accept": null,
-                   "Content-Type": "application/json"
-                }      
-    }
+```json
+{
+  "method": "post",
+  "params": { "action": "info",
+              "format": "json",
+              "one": "something here", 
+              "controller": "test",
+              "test": {"one": "something here"}
+            },
+  "format": { "symbol":"json",
+              "string": "application/json",
+              "synonyms": ["text/x-json", "application/jsonrequest"]
+            },
+  "headers": { "Authorization": null,
+               "Accept": null,
+               "Content-Type": "application/json"
+            }      
+}
+```
 
 ### Response
 

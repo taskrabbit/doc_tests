@@ -11,20 +11,21 @@ Testing out XML calls
 ```
 
 ### 200 OK
-    <?xml version="1.0" encoding="UTF-8"?>
-    <hash>
-      <params>
-        <action>info</action>
-        <one>something here</one>
-        <controller>test</controller>
-      </params>
-      <format>application/xml</format>
-      <method type="symbol">post</method>
-      <headers>
-        <Authorization nil="true"></Authorization>
-        <Content-Type>application/xml</Content-Type>
-        <Accept nil="true"></Accept>
-      </headers>
-    </hash>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<hash>
+  <params>
+    <action>info</action>
+    <one>something here</one>
+    <controller>test</controller>
+  </params>
+  <format>application/xml</format>
+  <method type="symbol">post</method>
+  <headers>
+    <Authorization nil="true"></Authorization>
+    <Content-Type>application/xml</Content-Type>
+    <Accept nil="true"></Accept>
+  </headers>
+</hash>
 
 
